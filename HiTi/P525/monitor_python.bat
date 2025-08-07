@@ -1,25 +1,24 @@
 @echo off
-chcp 65001 > nul
 
-:: 使用当前目录作为工作目录
+REM Use current directory as working directory
 set CURRENT_DIR=%~dp0
-:: 去掉路径末尾的反斜杠
+REM Remove trailing backslash
 set CURRENT_DIR=%CURRENT_DIR:~0,-1%
 cd /d %CURRENT_DIR%
 
-:: 设置日志文件路径
+REM Set log file path
 set LOG_FILE=%CURRENT_DIR%\service_log.txt
 
-:: 设置Python服务器脚本路径
+REM Set Python server script path
 set SERVER_SCRIPT=%CURRENT_DIR%\server.py
 
-echo 当前工作目录: %CURRENT_DIR%
-echo 日志文件路径: %LOG_FILE%
-echo Python服务脚本: %SERVER_SCRIPT%
+echo Current working directory: %CURRENT_DIR%
+echo Log file path: %LOG_FILE%
+echo Python server script: %SERVER_SCRIPT%
 
 :pyloop
-echo %date% %time% - 正在启动Python服务... >> %LOG_FILE%
-python -u %SERVER_SCRIPT% >> %LOG_FILE% 2>&1
-echo %date% %time% - Python服务已停止，5秒后重启... >> %LOG_FILE%
+echo %date% %time% - Starting Python service... >> %LOG_FILE%
+python -u "%SERVER_SCRIPT%" >> %LOG_FILE% 2>&1
+echo %date% %time% - Python service stopped, restarting in 5 seconds... >> %LOG_FILE%
 timeout /t 5 /nobreak > nul
 goto pyloop

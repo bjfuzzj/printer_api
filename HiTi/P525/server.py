@@ -8,7 +8,9 @@ app = Flask(__name__)
 is_windows = platform.system() == 'Windows'
 
 # DLL 路径设置为变量
-DLL_DIR = r"D:\camera\HiTiRollTypesSDK_Windows_1.10.14\dllx64"
+# DLL_DIR = r"D:\camera\HiTiRollTypesSDK_Windows_1.10.14\dllx64"
+# DLL 路径设置为当前目录
+DLL_DIR = os.getcwd()  # 使用当前工作目录
 DLL_NAME = "HTRTApiW.dll"
 dll_path = os.path.join(DLL_DIR, DLL_NAME)
 

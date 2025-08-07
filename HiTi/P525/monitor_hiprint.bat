@@ -1,25 +1,42 @@
 @echo off
-chcp 65001 > nul
 
-:: 使用当前目录作为工作目录
+REM Use current directory as working directory
 set CURRENT_DIR=%~dp0
-:: 去掉路径末尾的反斜杠
+REM Remove trailing backslash
 set CURRENT_DIR=%CURRENT_DIR:~0,-1%
 cd /d %CURRENT_DIR%
 
-:: 设置日志文件路径
+REM Set log file path
 set LOG_FILE=%CURRENT_DIR%\service_log.txt
 
-:: 设置Hi-Print程序路径（使用常规变量）
-set HIPRINT_EXE=C:\Program Files\hiprint
+REM Set Hi-Print program path
+set HIPRINT_EXE=C:\Program Files\hiprint\hiprint.exe
 
-echo 当前工作目录: %CURRENT_DIR%
-echo 日志文件路径: %LOG_FILE%
-echo Hi-Print程序: %HIPRINT_EXE%
+echo Current working directory: %CURRENT_DIR%
+echo Log file path: %LOG_FILE%
+echo Hi-Print program: %HIPRINT_EXE%
+echo.
+echo Starting Hi-Print monitoring...
+echo Press Ctrl+C to stop
+echo.
+
+REM Check if Hi-Print executable exists
+if not exist "%HIPRINT_EXE%" (
+    echo ERROR: Hi-Print executable not found at: %HIPRINT_EXE%
+    echo Please check the installation path
+    pause
+    exit /b 1
+)
 
 :exeloop
-echo %date% %time% - 正在启动Hi-Print程序... >> %LOG_FILE%
-%HIPRINT_EXE% >> %LOG_FILE% 2>&1
-echo %date% %time% - Hi-Print程序已停止，5秒后重启... >> %LOG_FILE%
+echo %date% %time% - Starting Hi-Print program...
+echo %date% %time% - Starting Hi-Print program... >> %LOG_FILE%
+"%HIPRINT_EXE%" >> %LOG_FILE% 2>&1
+set EXIT_CODE=%errorlevel%
+
+echo Hi-Print exited with code: %EXIT_CODE%
+echo %date% %time% - Hi-Print program stopped with exit code %EXIT_CODE%, restarting in 5 seconds... >> %LOG_FILE%
+echo Restarting in 5 seconds...
+
 timeout /t 5 /nobreak > nul
 goto exeloop
